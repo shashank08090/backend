@@ -13,12 +13,14 @@ app.post('/register', async(req,res) =>{
    res.end()
    console.log('sign up ')
 })
-app.post('/login', function(req, res){
-   console.log('test');
-   res.send("post route working")
-   res.end(); // end the response
+app.post('/login', async(req, res) => {
+let user = await User.findOne(req.body)
+if(user) {
+   res.send('user found, you are successfully logged in')
+}else {
+   res.send('login failed, please check your name and password')
+}
 });
-
 //  const connectdb = async() =>{
 //     mongoose.connect('mongodb://localhost:27017/myproject', ()=> console.log('db connected'))
 //     const productschema = new mongoose.Schema({})
