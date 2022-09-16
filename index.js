@@ -25,7 +25,7 @@ app.post("/login", async (req, res) => {
   if (user) {
     res.send({ user });
   } else {
-    res.send({ msg: "failed" });
+    res.send({ msg: "fail" });
   }
 });
 //  const connectdb = async() =>{
