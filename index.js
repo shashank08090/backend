@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 require("./db/config");
+const homepage = require("./homepage/homepage");
 const User = require("./db/User");
 const app = express();
 app.use(cors());
@@ -37,5 +38,8 @@ app.post("/login", async (req, res) => {
 //     console.warn(product)
 //  }
 //  connectdb()
+app.get("/homepage", async (req, res) => {
+  res.send(homepage);
+});
 app.get("/", (req, res) => res.send("hey ! it is working"));
 app.listen(5000, () => console.log("the app is working"));
