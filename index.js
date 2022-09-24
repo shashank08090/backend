@@ -5,6 +5,7 @@ const cors = require("cors");
 require("./db/config");
 const homepage = require("./homepage/homepage");
 const User = require("./db/User");
+const Questions = require("./db/questions");
 const app = express();
 app.use(cors());
 // app.use(express.json());
@@ -19,6 +20,34 @@ app.post("/register", async (req, res) => {
   res.end();
   console.log("sign up ");
 });
+
+app.post("/question", async (req, res) => {
+  // console.log(await User.find({ name: req.body.name }));
+  let question = new Questions(req.body);
+  // let question = new Questions();
+
+  let result = await question.save();
+  const data = req.body;
+  // console.log(data);
+  // const allquestions = await Questions.find({});
+  const s = await Questions?.find({ $text: { $search: req.body.name } });
+
+  if (s[0]) {
+    const length = s.length;
+    console.log(length);
+    console.log(s);
+    // s[0].question.push(req.body.question);
+  } else {
+    // let question = new Questions(req.body);
+    let result = await question.save();
+  }
+
+  // const user = await User.find({ name: req.body.name });
+  // console.log(user[0].name);
+  res.send("question saved in database successfully");
+  res.end();
+});
+
 app.post("/login", async (req, res) => {
   let user = await User.findOne(req.body);
   console.log(req.body);
