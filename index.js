@@ -44,7 +44,7 @@ app.post("/question", async (req, res) => {
 
   // const user = await User.find({ name: req.body.name });
   // console.log(user[0].name);
-  res.send("question saved in database successfully");
+  res.send("question saved in database successfully ");
   res.end();
 });
 
