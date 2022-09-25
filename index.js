@@ -22,29 +22,24 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/question", async (req, res) => {
-  // console.log(await User.find({ name: req.body.name }));
   let question = new Questions(req.body);
-  // let question = new Questions();
+  // await question.save();
+  let allques = await Questions.find();
+  res.send(allques);
+  let flag = 0;
+  allques.map((element) => {
+    if (element.name == question.name) {
+      element.question.push(question.question[0]);
+      element.save();
+      flag = 1;
+    }
+  });
 
-  let result = await question.save();
-  const data = req.body;
-  // console.log(data);
-  // const allquestions = await Questions.find({});
-  const s = await Questions?.find({ $text: { $search: req.body.name } });
-
-  if (s[0]) {
-    const length = s.length;
-    console.log(length);
-    console.log(s);
-    // s[0].question.push(req.body.question);
-  } else {
-    // let question = new Questions(req.body);
-    let result = await question.save();
+  if (flag == 0) {
+    await question.save();
   }
-
-  // const user = await User.find({ name: req.body.name });
-  // console.log(user[0].name);
-  res.send("question saved in database successfully ");
+  // res.send(question.name);
+  // if(question.name == )
   res.end();
 });
 

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const questionSchema = new mongoose.Schema({
   name: String,
-  question: String,
+  question: [],
 });
 
 questionSchema.index({ name: "text" });
