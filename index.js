@@ -5,6 +5,7 @@ const cors = require("cors");
 require("./db/config");
 const homepage = require("./homepage/homepage");
 const User = require("./db/User");
+const Questions = require("./db/questions");
 const app = express();
 app.use(cors());
 // app.use(express.json());
@@ -19,6 +20,29 @@ app.post("/register", async (req, res) => {
   res.end();
   console.log("sign up ");
 });
+
+app.post("/question", async (req, res) => {
+  let question = new Questions(req.body);
+  // await question.save();
+  let allques = await Questions.find();
+  res.send(allques);
+  let flag = 0;
+  allques.map((element) => {
+    if (element.name == question.name) {
+      element.question.push(question.question[0]);
+      element.save();
+      flag = 1;
+    }
+  });
+
+  if (flag == 0) {
+    await question.save();
+  }
+  // res.send(question.name);
+  // if(question.name == )
+  res.end();
+});
+
 app.post("/login", async (req, res) => {
   let user = await User.findOne(req.body);
   console.log(req.body);
