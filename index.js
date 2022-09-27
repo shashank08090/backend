@@ -8,10 +8,15 @@ const User = require("./db/User");
 const Questions = require("./db/questions");
 const app = express();
 app.use(cors());
+const cloudinary = require("cloudinary");
+require("./Cloudinary/cloudinary");
+require("./db/photo");
 // app.use(express.json());
+const upload = require("./handlers/multer");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+const Blog = mongoose.model("Blog");
 app.post("/register", async (req, res) => {
   let user = new User(req.body);
   let result = await user.save();
@@ -19,6 +24,17 @@ app.post("/register", async (req, res) => {
   res.send([req.body]);
   res.end();
   console.log("sign up ");
+});
+
+app.post("/photo", upload.single("img"), async (req, res) => {
+  const result = await cloudinary.v2.uploader.upload(req.file.path);
+  const blog = new Blog();
+  blog.title = req.body.title;
+  blog.imageUrl = result.secure_url;
+  await blog.save();
+  res.send({
+    message: "Blog is Created",
+  });
 });
 
 app.post("/question", async (req, res) => {
