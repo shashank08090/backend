@@ -6,12 +6,46 @@ require("./db/config");
 const homepage = require("./homepage/homepage");
 const User = require("./db/User");
 const Questions = require("./db/questions");
+const multer = require("multer");
+const ImageModel = require("./db/image.model");
 const app = express();
 app.use(cors());
 // app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+
+const Storage = multer.diskStorage({
+  destination: "uploads",
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({
+  storage: Storage,
+}).single("testImage");
+
+app.post("/upload", (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      const newImage = new ImageModel({
+        name: req.body.name,
+        image: {
+          data: req.file.filename,
+          ccontentType: "image/png",
+        },
+      });
+      newImage
+        .save()
+        .then(() => res.send("successfully uploaded"))
+        .catch((err) => res.send(err));
+    }
+  });
+});
+
 app.post("/register", async (req, res) => {
   let user = new User(req.body);
   let result = await user.save();
