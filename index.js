@@ -6,6 +6,7 @@ require("./db/config");
 const homepage = require("./homepage/homepage");
 const User = require("./db/User");
 const Questions = require("./db/questions");
+const Answers = require("./db/answers");
 const multer = require("multer");
 const ImageModel = require("./db/image.model");
 const app = express();
@@ -74,6 +75,28 @@ app.post("/question", async (req, res) => {
   }
   // res.send(question.name);
   // if(question.name == )
+  res.end();
+});
+
+app.post("/answer", async (req, res) => {
+  let answer = new Answers(req.body);
+  // await answer.save();
+  let allques = await Answers.find();
+  res.send(allques);
+  let flag = 0;
+  allques.map((element) => {
+    if (element.question == answer.question) {
+      element.answer.push(answer.answer[0]);
+      element.save();
+      flag = 1;
+    }
+  });
+
+  if (flag == 0) {
+    await answer.save();
+  }
+  // res.send(answer.name);
+  // if(answer.name == )
   res.end();
 });
 
