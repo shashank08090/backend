@@ -35,8 +35,8 @@ app.post("/upload", (req, res) => {
       const newImage = new ImageModel({
         name: req.body.name,
         image: {
-          data: req.file.filename,
-          ccontentType: "image/png",
+          // data: req.file.filename,
+          contentType: "image/png",
         },
       });
       newImage
