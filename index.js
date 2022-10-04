@@ -35,8 +35,8 @@ app.post("/upload", (req, res) => {
       const newImage = new ImageModel({
         name: req.body.name,
         image: {
-          data: req.file.filename,
-          ccontentType: "image/png",
+          // data: req.file.filename,
+          contentType: "image/png",
         },
       });
       newImage
@@ -98,6 +98,11 @@ app.post("/answer", async (req, res) => {
   // res.send(answer.name);
   // if(answer.name == )
   res.end();
+});
+
+app.get("/answer", async (req, res) => {
+  let allques = await Answers.find();
+  res.send(allques);
 });
 
 app.post("/login", async (req, res) => {
