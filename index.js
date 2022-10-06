@@ -37,7 +37,7 @@ app.post("/payment", (req, res) => {
   const { product, token } = req.body;
   console.log("PRODUCT", product);
   console.log("PRICE", product.price);
-  const idempontency_key = uuid();
+  const idempotencyKey = uuid();
   return stripe.customers
     .create({
       email: token.email,
@@ -46,17 +46,17 @@ app.post("/payment", (req, res) => {
     .then((customer) => {
       stripe.charges.create(
         {
-          amount: product.price,
-          currency: "INR",
+          amount: product.price * 100,
+          currency: "usd",
           customer: customer.id,
           receipt_email: token.email,
-          description: `product.name`,
-          shippint: {
+          description: "service provider",
+          shipping: {
             name: token.card.name,
             address: { country: token.card.address_country },
           },
         },
-        { idempontency_key }
+        { idempotencyKey: idempotencyKey }
       );
     })
     .then((result) => res.status(200).json(result))
