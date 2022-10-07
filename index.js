@@ -154,6 +154,23 @@ app.post("/likes", async (req, res) => {
   res.end();
 });
 
+app.post("/dislikes", async (req, res) => {
+  let dislikedquestion = new LikedQuestions(req.body);
+  let alldislikedquestion = await LikedQuestions.find();
+  let flag = 0;
+  alldislikedquestion.map((elem, index) => {
+    if (elem.question == req.body.question) {
+      elem.dislikedBy.push(dislikedquestion.dislikedBy[0]);
+      elem.save();
+      flag = 1;
+    }
+  });
+  if (flag == 0) {
+    await likedquestion.save();
+  }
+  res.end();
+});
+
 app.get("/answer", async (req, res) => {
   let allques = await Answers.find();
   res.send(allques);
