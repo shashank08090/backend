@@ -15,6 +15,7 @@ const Questions = require("./db/questions");
 const Answers = require("./db/answers");
 const multer = require("multer");
 const ImageModel = require("./db/image.model");
+const LikedQuestions = require("./db/like");
 const app = express();
 app.use(cors());
 // app.use(express.json());
@@ -136,6 +137,23 @@ app.post("/answer", async (req, res) => {
   res.end();
 });
 
+app.post("/likes", async (req, res) => {
+  let likedquestion = new LikedQuestions(req.body);
+  let alllikedquestion = await LikedQuestions.find();
+  let flag = 0;
+  alllikedquestion.map((elem, index) => {
+    if (elem.question == req.body.question) {
+      elem.likedBy.push(likedquestion.likedBy[0]);
+      elem.save();
+      flag = 1;
+    }
+  });
+  if (flag == 0) {
+    await likedquestion.save();
+  }
+  res.end();
+});
+
 app.get("/answer", async (req, res) => {
   let allques = await Answers.find();
   res.send(allques);
@@ -163,5 +181,6 @@ app.post("/login", async (req, res) => {
 app.get("/homepage", async (req, res) => {
   res.send(homepage);
 });
+
 app.get("/", (req, res) => res.send("hey ! it is working"));
 app.listen(5000, () => console.log("the app is working"));
