@@ -166,7 +166,7 @@ app.post("/dislikes", async (req, res) => {
     }
   });
   if (flag == 0) {
-    await likedquestion.save();
+    await dislikedquestion.save();
   }
   res.end();
 });
