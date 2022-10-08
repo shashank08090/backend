@@ -136,7 +136,22 @@ app.post("/answer", async (req, res) => {
   // if(answer.name == )
   res.end();
 });
+app.get("/likedquestions", async (req, res) => {
+  let likedquestion = new LikedQuestions(req.body);
+  let alllikedquestion = await LikedQuestions.find();
 
+  // res.send([alllikedquestion[0].likedBy.length]);
+  // res.send("2nd data");
+  var reqdata = [{}];
+  alllikedquestion.map((elem, index) => {
+    reqdata.push({
+      question: elem.question,
+      numberOflikes: elem.likedBy.length,
+    });
+  });
+  res.send(reqdata);
+  res.end();
+});
 app.post("/likes", async (req, res) => {
   let likedquestion = new LikedQuestions(req.body);
   let alllikedquestion = await LikedQuestions.find();
