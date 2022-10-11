@@ -86,7 +86,13 @@ app.post("/upload", (req, res) => {
 
 app.post("/register", async (req, res) => {
   let user = new User(req.body);
-  let result = await user.save();
+
+  let findthisuser = await User.findOne(req.body);
+  if (findthisuser) {
+    res.send({ msg: "This user already exists" });
+  } else {
+    let result = await user.save();
+  }
   console.log(user);
   res.send([req.body]);
   res.end();
