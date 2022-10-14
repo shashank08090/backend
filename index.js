@@ -16,6 +16,7 @@ const Answers = require("./db/answers");
 const multer = require("multer");
 const ImageModel = require("./db/image.model");
 const LikedQuestions = require("./db/like");
+const Commentonquestion = require("./db/comment.question");
 const app = express();
 app.use(cors());
 // app.use(express.json());
@@ -64,6 +65,25 @@ app.post("/payment", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+app.get("/commentonquestion", async (req, res) => {
+  let comment = await Commentonquestion();
+  let findallcomment = await Commentonquestion.find();
+  res.send(findallcomment);
+});
+app.post("/commentonquestion", async (req, res) => {
+  let comment = new Commentonquestion(req.body);
+
+  let findthisuser = await Commentonquestion.findOne(req.body);
+  if (findthisuser) {
+    res.send({ msg: "This user already exists" });
+  } else {
+    let result = await comment.save();
+    res.send({ msg: "comment saved in database" });
+  }
+  console.log(comment);
+  res.end();
+  console.log("sign up ");
+});
 app.post("/upload", (req, res) => {
   upload(req, res, (err) => {
     if (err) {
